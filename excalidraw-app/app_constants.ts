@@ -36,7 +36,18 @@ export const FIREBASE_STORAGE_PREFIXES = {
 
 export const ROOM_ID_BYTES = 10;
 
-export const STORAGE_KEYS = {
+export const STORAGE_KEYS: {
+  LOCAL_STORAGE_ELEMENTS: string;
+  LOCAL_STORAGE_APP_STATE: string;
+  LOCAL_STORAGE_COLLAB: string;
+  LOCAL_STORAGE_THEME: string;
+  LOCAL_STORAGE_DEBUG: string;
+  VERSION_DATA_STATE: string;
+  VERSION_FILES: string;
+  IDB_LIBRARY: string;
+  IDB_TTD_CHATS: string;
+  __LEGACY_LOCAL_STORAGE_LIBRARY: string;
+} = {
   LOCAL_STORAGE_ELEMENTS: "excalidraw",
   LOCAL_STORAGE_APP_STATE: "excalidraw-state",
   LOCAL_STORAGE_COLLAB: "excalidraw-collab",
@@ -50,7 +61,23 @@ export const STORAGE_KEYS = {
 
   // do not use apart from migrations
   __LEGACY_LOCAL_STORAGE_LIBRARY: "excalidraw-library",
-} as const;
+};
+
+/**
+ * Configure storage keys for a specific board (used by the extension).
+ */
+export function configureBoardStorage(boardId: string) {
+  STORAGE_KEYS.LOCAL_STORAGE_ELEMENTS = `excalidraw-board-${boardId}`;
+  STORAGE_KEYS.LOCAL_STORAGE_APP_STATE = `excalidraw-board-state-${boardId}`;
+}
+
+/**
+ * Reset storage keys to defaults.
+ */
+export function resetStorageKeys() {
+  STORAGE_KEYS.LOCAL_STORAGE_ELEMENTS = "excalidraw";
+  STORAGE_KEYS.LOCAL_STORAGE_APP_STATE = "excalidraw-state";
+}
 
 export const COOKIES = {
   AUTH_STATE_COOKIE: "excplus-auth",
