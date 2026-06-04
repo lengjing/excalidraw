@@ -1,0 +1,32 @@
+{
+  "name": "excalidraw-extension",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Excalidraw as a Chrome new tab extension",
+  "scripts": {
+    "start": "vite",
+    "build": "vite build && rimraf dist/_headers",
+    "build:extension": "vite build && rimraf dist/_headers",
+    "build:zip": "yarn build && cd dist && bestzip ../excalidraw-extension.zip *"
+  },
+  "dependencies": {
+    "@excalidraw/random-username": "1.0.0",
+    "firebase": "11.3.1",
+    "i18next-browser-languagedetector": "6.1.4",
+    "idb-keyval": "6.0.3",
+    "jotai": "2.11.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "socket.io-client": "4.7.2",
+    "uqr": "0.1.2",
+    "vite-plugin-html": "3.2.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "3.1.0",
+    "bestzip": "3.0.1",
+    "rollup-plugin-copy": "^3.5.0",
+    "vite": "5.0.12",
+    "vite-plugin-html": "3.2.2",
+    "vite-plugin-svgr": "4.2.0"
+  }
+}

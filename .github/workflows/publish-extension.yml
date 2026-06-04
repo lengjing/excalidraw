@@ -1,0 +1,40 @@
+name: Publish Chrome Extension
+
+on:
+  push:
+    tags:
+      - 'v*' # Trigger on version tags, e.g., v1.0.0
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build extension
+        run: yarn build:extension
+
+      - name: Create extension zip
+        run: |
+          cd extension/dist
+          zip -r ../../excalidraw-extension.zip .
+
+      - name: Publish to Chrome Web Store
+        uses: Klemensas/chrome-extension-upload-action@v1.3.1
+        with:
+          refresh-token: ${{ secrets.REFRESH_TOKEN }}
+          client-id: ${{ secrets.CLIENT_ID }}
+          client-secret: ${{ secrets.CLIENT_SECRET }}
+          file-name: 'excalidraw-extension.zip'
+          app-id: ${{ secrets.EXTENSION_ID }}
+          publish: true

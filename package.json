@@ -4,6 +4,7 @@
   "packageManager": "yarn@1.22.22",
   "workspaces": [
     "excalidraw-app",
+    "extension",
     "packages/*",
     "examples/*"
   ],
@@ -60,6 +61,7 @@
     "build:packages": "yarn build:common && yarn build:fractional-indexing && yarn build:math && yarn build:element && yarn build:excalidraw",
     "build:version": "yarn --cwd ./excalidraw-app build:version",
     "build": "yarn --cwd ./excalidraw-app build",
+    "build:extension": "yarn --cwd ./extension build:extension",
     "build:preview": "yarn --cwd ./excalidraw-app build:preview",
     "start": "yarn --cwd ./excalidraw-app start",
     "start:production": "yarn --cwd ./excalidraw-app start:production",
