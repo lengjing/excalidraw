@@ -23,15 +23,14 @@ export function BoardView({ boardId }: BoardViewProps) {
     // Override storage keys to point to this board's data
     configureBoardStorage(boardId);
 
-    // Update the board's updatedAt timestamp
-    updateBoard(boardId, {});
-
     // Dynamically import to ensure storage keys are set before App initializes
     import("../../excalidraw-app/App").then((mod) => {
       setExcalidrawApp(() => mod.default);
     });
 
     return () => {
+      // Update the board's updatedAt timestamp when leaving
+      updateBoard(boardId, {});
       resetStorageKeys();
     };
   }, [boardId]);
