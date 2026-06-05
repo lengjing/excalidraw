@@ -1,11 +1,11 @@
 /**
- * WorkspaceView - Container for workspace with Canvas and Notes tabs.
+ * WorkspaceView - Side-by-side Canvas (65%) + Notes (35%) layout.
+ * Also captures a canvas thumbnail periodically and saves it.
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { updateWorkspace } from "../workspaceManager";
-import { navigateToHome, navigateToWorkspace } from "../router";
-import type { WorkspaceTab } from "../router";
+import { navigateToHome } from "../router";
 import {
   configureBoardStorage,
   resetStorageKeys,
@@ -16,18 +16,44 @@ import "./WorkspaceView.css";
 
 interface WorkspaceViewProps {
   workspaceId: string;
-  activeTab: WorkspaceTab;
+  // activeTab kept in signature for router compat, not used in split layout
+  activeTab?: string;
 }
 
-export function WorkspaceView({ workspaceId, activeTab }: WorkspaceViewProps) {
+/** Capture the Excalidraw canvas element as a JPEG data-URL thumbnail. */
+function captureCanvasThumbnail(): string | null {
+  const canvas = document.querySelector<HTMLCanvasElement>(
+    "canvas.excalidraw__canvas",
+  );
+  if (!canvas) {
+    return null;
+  }
+  try {
+    // Shrink to thumbnail size
+    const thumbW = 400;
+    const thumbH = Math.round((thumbW * canvas.height) / canvas.width) || 240;
+    const thumb = document.createElement("canvas");
+    thumb.width = thumbW;
+    thumb.height = thumbH;
+    const ctx = thumb.getContext("2d");
+    if (!ctx) {
+      return null;
+    }
+    ctx.drawImage(canvas, 0, 0, thumbW, thumbH);
+    return thumb.toDataURL("image/jpeg", 0.6);
+  } catch {
+    return null;
+  }
+}
+
+export function WorkspaceView({ workspaceId }: WorkspaceViewProps) {
   const [ExcalidrawApp, setExcalidrawApp] =
     useState<React.ComponentType | null>(null);
+  const thumbnailTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    // Override storage keys to point to this workspace's canvas data
     configureBoardStorage(workspaceId);
 
-    // Dynamically import to ensure storage keys are set before App initializes
     import("../../excalidraw-app/App").then((mod) => {
       setExcalidrawApp(() => mod.default);
     });
@@ -35,12 +61,41 @@ export function WorkspaceView({ workspaceId, activeTab }: WorkspaceViewProps) {
     return () => {
       updateWorkspace(workspaceId, {});
       resetStorageKeys();
+      if (thumbnailTimerRef.current) {
+        clearInterval(thumbnailTimerRef.current);
+      }
     };
   }, [workspaceId]);
 
-  const handleTabSwitch = (tab: WorkspaceTab) => {
-    navigateToWorkspace(workspaceId, tab);
-  };
+  // Once ExcalidrawApp is loaded, start thumbnail capture on an interval
+  useEffect(() => {
+    if (!ExcalidrawApp) {
+      return;
+    }
+
+    // Delay first capture to let Excalidraw render
+    const firstCapture = setTimeout(() => {
+      const thumb = captureCanvasThumbnail();
+      if (thumb) {
+        updateWorkspace(workspaceId, { thumbnail: thumb });
+      }
+    }, 2000);
+
+    thumbnailTimerRef.current = setInterval(() => {
+      const thumb = captureCanvasThumbnail();
+      if (thumb) {
+        updateWorkspace(workspaceId, { thumbnail: thumb });
+      }
+    }, 10_000);
+
+    return () => {
+      clearTimeout(firstCapture);
+      if (thumbnailTimerRef.current) {
+        clearInterval(thumbnailTimerRef.current);
+        thumbnailTimerRef.current = null;
+      }
+    };
+  }, [ExcalidrawApp, workspaceId]);
 
   return (
     <div className="workspace-view">
@@ -52,38 +107,22 @@ export function WorkspaceView({ workspaceId, activeTab }: WorkspaceViewProps) {
         >
           ← Wisp
         </button>
-
-        <div className="workspace-view__tabs">
-          <button
-            className={`workspace-view__tab ${activeTab === "canvas" ? "workspace-view__tab--active" : ""}`}
-            onClick={() => handleTabSwitch("canvas")}
-          >
-            🎨 Canvas
-          </button>
-          <button
-            className={`workspace-view__tab ${activeTab === "notes" ? "workspace-view__tab--active" : ""}`}
-            onClick={() => handleTabSwitch("notes")}
-          >
-            📝 Notes
-          </button>
-        </div>
       </div>
 
-      <div className="workspace-view__content">
-        {activeTab === "canvas" && ExcalidrawApp && (
-          <div className="workspace-view__canvas">
+      <div className="workspace-view__body">
+        <div className="workspace-view__canvas-pane">
+          {ExcalidrawApp ? (
             <ExcalidrawApp />
-          </div>
-        )}
-        {activeTab === "canvas" && !ExcalidrawApp && (
-          <div className="workspace-view__loading">Loading canvas...</div>
-        )}
-        {activeTab === "notes" && (
-          <div className="workspace-view__notes">
-            <NotesEditor workspaceId={workspaceId} />
-          </div>
-        )}
+          ) : (
+            <div className="workspace-view__loading">Loading canvas…</div>
+          )}
+        </div>
+
+        <div className="workspace-view__notes-pane">
+          <NotesEditor workspaceId={workspaceId} />
+        </div>
       </div>
     </div>
   );
 }
+

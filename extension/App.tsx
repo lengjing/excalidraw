@@ -14,7 +14,6 @@ export function App() {
       <WorkspaceView
         key={route.workspaceId}
         workspaceId={route.workspaceId}
-        activeTab={route.tab || "canvas"}
       />
     );
   }

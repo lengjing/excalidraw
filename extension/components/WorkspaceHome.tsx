@@ -140,7 +140,10 @@ export function WorkspaceHome() {
               {ws.thumbnail ? (
                 <img src={ws.thumbnail} alt={ws.name} />
               ) : (
-                <span className="ws-card__thumbnail-placeholder">🎨</span>
+                <div className="ws-card__thumbnail-empty">
+                  <span className="ws-card__thumbnail-icon">🎨</span>
+                  <span className="ws-card__thumbnail-text">Canvas</span>
+                </div>
               )}
             </div>
 
@@ -161,9 +164,13 @@ export function WorkspaceHome() {
               <span className="ws-card__date">{formatDate(ws.updatedAt)}</span>
             </div>
 
-            {ws.notesSummary && (
-              <div className="ws-card__notes-summary">{ws.notesSummary}</div>
-            )}
+            <div className="ws-card__notes-summary">
+              {ws.notesSummary ? (
+                ws.notesSummary
+              ) : (
+                <span className="ws-card__notes-empty">No notes yet</span>
+              )}
+            </div>
           </div>
         ))}
       </div>
