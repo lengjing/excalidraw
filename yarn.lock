@@ -3148,6 +3148,11 @@
   resolved "https://registry.npmmirror.com/@tiptap/extension-horizontal-rule/-/extension-horizontal-rule-3.25.0.tgz#eedef936ff1765639dbd7e34ed1fd7c64ee80c3d"
   integrity sha512-Ku1PQxiBoprEwf7O2uzJSYvfpkQ26UhZ4tptXqCUdsG9IXYn/Gg9qAtJrm8UFnPwsxm0CrkMsAlAG3JmBrtXKQ==
 
+"@tiptap/extension-image@3.25.0":
+  version "3.25.0"
+  resolved "https://registry.npmmirror.com/@tiptap/extension-image/-/extension-image-3.25.0.tgz#01223edabdbdd081f8e760e416cc342ecca080a0"
+  integrity sha512-LO1W36UovZzs7CqqHo1Fo3/nQDz9UJaV26D+YolqnbMBC2UDxozBPuxxvwkfl7965E3Q/gM8HjdDVM2DcH0VoQ==
+
 "@tiptap/extension-italic@^3.25.0":
   version "3.25.0"
   resolved "https://registry.npmmirror.com/@tiptap/extension-italic/-/extension-italic-3.25.0.tgz#74cea6cfbb990b2f7238a1bbbf59a926db3e9da2"
