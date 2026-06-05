@@ -49,6 +49,13 @@ function nextOrderedPrefix(prefix: string): string {
   return prefix.replace(/(\d+)/, (_, n) => String(Number(n) + 1));
 }
 
+const NOTES_PLACEHOLDER = `# Title
+
+Start writing…
+
+- Use - for bullet lists
+- **bold** and *italic* work too`;
+
 export function NotesEditor({ workspaceId }: NotesEditorProps) {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -199,7 +206,7 @@ export function NotesEditor({ workspaceId }: NotesEditorProps) {
         className="notes-editor__textarea"
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        placeholder={"# Title\n\nStart writing…\n\n- Use - for bullet lists\n- **bold** and *italic* work too"}
+        placeholder={NOTES_PLACEHOLDER}
         spellCheck
       />
     </div>
