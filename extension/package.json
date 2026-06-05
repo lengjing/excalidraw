@@ -11,6 +11,10 @@
   },
   "dependencies": {
     "@excalidraw/random-username": "1.0.0",
+    "@tiptap/extension-image": "3.25.0",
+    "@tiptap/extension-placeholder": "3.25.0",
+    "@tiptap/react": "3.25.0",
+    "@tiptap/starter-kit": "3.25.0",
     "firebase": "11.3.1",
     "i18next-browser-languagedetector": "6.1.4",
     "idb-keyval": "6.0.3",

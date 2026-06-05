@@ -1,17 +1,22 @@
 /**
- * Extension App - routes between board home and board editor.
+ * Wisp App - routes between workspace home and workspace view.
  */
 
 import { useRouter } from "./router";
-import { BoardHome } from "./components/BoardHome";
-import { BoardView } from "./components/BoardView";
+import { WorkspaceHome } from "./components/WorkspaceHome";
+import { WorkspaceView } from "./components/WorkspaceView";
 
 export function App() {
   const route = useRouter();
 
-  if (route.type === "board" && route.boardId) {
-    return <BoardView key={route.boardId} boardId={route.boardId} />;
+  if (route.type === "workspace" && route.workspaceId) {
+    return (
+      <WorkspaceView
+        key={route.workspaceId}
+        workspaceId={route.workspaceId}
+      />
+    );
   }
 
-  return <BoardHome />;
+  return <WorkspaceHome />;
 }

@@ -64,11 +64,11 @@ export const STORAGE_KEYS: {
 };
 
 /**
- * Configure storage keys for a specific board (used by the extension).
+ * Configure storage keys for a specific board/workspace (used by the extension).
  */
 export function configureBoardStorage(boardId: string) {
-  STORAGE_KEYS.LOCAL_STORAGE_ELEMENTS = `excalidraw-board-${boardId}`;
-  STORAGE_KEYS.LOCAL_STORAGE_APP_STATE = `excalidraw-board-state-${boardId}`;
+  STORAGE_KEYS.LOCAL_STORAGE_ELEMENTS = `wisp-canvas-${boardId}`;
+  STORAGE_KEYS.LOCAL_STORAGE_APP_STATE = `wisp-canvas-state-${boardId}`;
 }
 
 /**
