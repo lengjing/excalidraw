@@ -1,0 +1,229 @@
+.notes-editor {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  font-family:
+    "Assistant",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+}
+
+.notes-editor__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  background: #fafafa;
+}
+
+html.dark .notes-editor__toolbar {
+  background: #252525;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.notes-editor__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+}
+
+html.dark .notes-editor__title {
+  color: #bbb;
+}
+
+.notes-editor__toggle {
+  background: transparent;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #666;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+}
+
+html.dark .notes-editor__toggle {
+  border-color: #444;
+  color: #aaa;
+}
+
+.notes-editor__toggle:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+html.dark .notes-editor__toggle:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.notes-editor__toggle--active {
+  background: rgba(105, 101, 219, 0.08);
+  border-color: #6965db;
+  color: #6965db;
+}
+
+html.dark .notes-editor__toggle--active {
+  background: rgba(105, 101, 219, 0.15);
+  border-color: #6965db;
+  color: #9b8fef;
+}
+
+.notes-editor__body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.notes-editor__body--split {
+  gap: 1px;
+  background: rgba(0, 0, 0, 0.06);
+}
+
+html.dark .notes-editor__body--split {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.notes-editor__editor-pane {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.notes-editor__textarea {
+  flex: 1;
+  border: none;
+  outline: none;
+  resize: none;
+  padding: 24px;
+  font-family: "JetBrains Mono", "Fira Code", "SF Mono", Monaco, monospace;
+  font-size: 14px;
+  line-height: 1.7;
+  background: #fff;
+  color: #1a1a1a;
+  tab-size: 2;
+}
+
+html.dark .notes-editor__textarea {
+  background: #1e1e1e;
+  color: #e0e0e0;
+}
+
+.notes-editor__textarea::placeholder {
+  color: #bbb;
+}
+
+html.dark .notes-editor__textarea::placeholder {
+  color: #555;
+}
+
+.notes-editor__preview-pane {
+  flex: 1;
+  overflow: auto;
+  background: #fff;
+}
+
+html.dark .notes-editor__preview-pane {
+  background: #1e1e1e;
+}
+
+.notes-editor__preview-content {
+  padding: 24px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #333;
+  max-width: 720px;
+}
+
+html.dark .notes-editor__preview-content {
+  color: #ddd;
+}
+
+.notes-editor__preview-content h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+html.dark .notes-editor__preview-content h1 {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.notes-editor__preview-content h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 24px 0 12px;
+}
+
+.notes-editor__preview-content h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 20px 0 10px;
+}
+
+.notes-editor__preview-content p {
+  margin: 0 0 12px;
+}
+
+.notes-editor__preview-content ul {
+  padding-left: 24px;
+  margin: 0 0 12px;
+}
+
+.notes-editor__preview-content li {
+  margin-bottom: 4px;
+}
+
+.notes-editor__preview-content code {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+  font-size: 13px;
+}
+
+html.dark .notes-editor__preview-content code {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.notes-editor__preview-content blockquote {
+  margin: 0 0 12px;
+  padding: 8px 16px;
+  border-left: 3px solid #6965db;
+  background: rgba(105, 101, 219, 0.04);
+  color: #555;
+}
+
+html.dark .notes-editor__preview-content blockquote {
+  background: rgba(105, 101, 219, 0.08);
+  color: #bbb;
+}
+
+.notes-editor__preview-content hr {
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  margin: 24px 0;
+}
+
+html.dark .notes-editor__preview-content hr {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+.notes-editor__preview-content a {
+  color: #6965db;
+  text-decoration: none;
+}
+
+.notes-editor__preview-content a:hover {
+  text-decoration: underline;
+}
+
+.notes-editor__preview-content strong {
+  font-weight: 600;
+}

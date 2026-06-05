@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Excalidraw - Infinite Whiteboard",
+  "name": "Wisp - Workspace for New Tab",
   "version": "1.0.0",
-  "description": "Transform your new tab into a lightning-fast, endless whiteboard. Sketch ideas, create diagrams, and take visual notes instantly.",
+  "description": "Transform your new tab into a creative workspace. Each workspace includes a canvas for diagrams and notes for documentation.",
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
