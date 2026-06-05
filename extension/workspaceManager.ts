@@ -171,6 +171,7 @@ export async function migrateFromBoards(): Promise<string | null> {
     }
 
     // Migrate each board to a workspace
+    const migratedWorkspaces: WorkspaceMeta[] = [];
     for (const board of boards) {
       const ws: WorkspaceMeta = {
         id: board.id,
@@ -190,10 +191,10 @@ export async function migrateFromBoards(): Promise<string | null> {
         localStorage.setItem(getCanvasAppStateKey(ws.id), stateData);
       }
 
-      const workspaces = await getWorkspaces();
-      workspaces.push(ws);
-      await saveWorkspaces(workspaces);
+      migratedWorkspaces.push(ws);
     }
+
+    await saveWorkspaces(migratedWorkspaces);
 
     localStorage.setItem(MIGRATION_DONE_KEY, "1");
     return null;

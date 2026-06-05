@@ -20,17 +20,23 @@ interface NotesEditorProps {
   workspaceId: string;
 }
 
-// Simple markdown to HTML converter for preview
+/**
+ * Simple markdown to HTML converter for preview.
+ * Security: HTML is escaped first, then markdown syntax is converted to
+ * safe structural elements. Only whitelisted HTML tags are produced.
+ */
 function markdownToHtml(md: string): string {
   let html = md;
 
-  // Escape HTML
+  // Step 1: Escape all HTML entities to prevent XSS
   html = html
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 
-  // Headers
+  // Step 2: Process headers (must go from h6→h1 to avoid partial matches)
   html = html.replace(/^######\s+(.+)$/gm, "<h6>$1</h6>");
   html = html.replace(/^#####\s+(.+)$/gm, "<h5>$1</h5>");
   html = html.replace(/^####\s+(.+)$/gm, "<h4>$1</h4>");
@@ -38,36 +44,39 @@ function markdownToHtml(md: string): string {
   html = html.replace(/^##\s+(.+)$/gm, "<h2>$1</h2>");
   html = html.replace(/^#\s+(.+)$/gm, "<h1>$1</h1>");
 
-  // Bold and italic
+  // Step 3: Inline formatting
   html = html.replace(/\*\*\*(.+?)\*\*\*/g, "<strong><em>$1</em></strong>");
   html = html.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
   html = html.replace(/\*(.+?)\*/g, "<em>$1</em>");
-
-  // Inline code
   html = html.replace(/`([^`]+)`/g, "<code>$1</code>");
 
-  // Links
+  // Step 4: Links - only allow http/https URLs to prevent javascript: XSS
   html = html.replace(
-    /\[([^\]]+)\]\(([^)]+)\)/g,
-    '<a href="$2" target="_blank" rel="noopener">$1</a>',
+    /\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g,
+    '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>',
   );
+  // Remove any remaining markdown links with non-http protocols
+  html = html.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
 
-  // Unordered lists
+  // Step 5: Lists
   html = html.replace(/^\*\s+(.+)$/gm, "<li>$1</li>");
   html = html.replace(/^-\s+(.+)$/gm, "<li>$1</li>");
   html = html.replace(/((<li>.*<\/li>\n?)+)/g, "<ul>$1</ul>");
 
-  // Blockquotes
-  html = html.replace(/^&gt;\s+(.+)$/gm, "<blockquote>$1</blockquote>");
+  // Step 6: Blockquotes
+  html = html.replace(
+    /^&amp;gt;\s+(.+)$/gm,
+    "<blockquote>$1</blockquote>",
+  );
 
-  // Horizontal rules
+  // Step 7: Horizontal rules
   html = html.replace(/^---$/gm, "<hr>");
 
-  // Paragraphs (double newlines)
+  // Step 8: Paragraphs
   html = html.replace(/\n\n/g, "</p><p>");
   html = `<p>${html}</p>`;
 
-  // Clean up empty paragraphs
+  // Clean up: remove empty paragraphs and fix nesting
   html = html.replace(/<p>\s*<\/p>/g, "");
   html = html.replace(/<p>(<h[1-6]>)/g, "$1");
   html = html.replace(/(<\/h[1-6]>)<\/p>/g, "$1");
@@ -115,14 +124,23 @@ export function NotesEditor({ workspaceId }: NotesEditorProps) {
     }, 500);
   };
 
-  // Save on unmount
+  // Save on unmount to prevent data loss
   useEffect(() => {
     return () => {
       if (saveTimeoutRef.current) {
         clearTimeout(saveTimeoutRef.current);
       }
+      // Persist any pending changes immediately
+      const currentContent = document.querySelector<HTMLTextAreaElement>(
+        ".notes-editor__textarea",
+      )?.value;
+      if (currentContent !== undefined) {
+        saveNotesContent(workspaceId, currentContent);
+        const summary = generateNotesSummary(currentContent);
+        updateWorkspace(workspaceId, { notesSummary: summary });
+      }
     };
-  }, []);
+  }, [workspaceId]);
 
   return (
     <div className="notes-editor">
