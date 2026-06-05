@@ -118,10 +118,11 @@ export function saveNotesContent(
 // Generate a summary from notes content (first ~100 chars of text)
 export function generateNotesSummary(content: string): string {
   const text = content
+    .replace(/<[^>]+>/g, " ") // strip HTML tags (Tiptap stores HTML)
     .replace(/^#{1,6}\s+/gm, "")
     .replace(/[*_~`>]/g, "")
     .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
-    .replace(/\n+/g, " ")
+    .replace(/\s+/g, " ")
     .trim();
   if (text.length <= 100) {
     return text;
