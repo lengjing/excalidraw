@@ -61,6 +61,7 @@ export function NotesEditor({ workspaceId }: NotesEditorProps) {
       return;
     }
     const content = getNotesContent(workspaceId) || "";
+    // false = don't emit an update event, so we don't trigger an unnecessary save
     editor.commands.setContent(content, false);
   }, [editor, workspaceId]);
 

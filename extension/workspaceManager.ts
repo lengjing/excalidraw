@@ -115,13 +115,11 @@ export function saveNotesContent(
   localStorage.setItem(getNotesKey(workspaceId), content);
 }
 
-// Generate a summary from notes content (first ~100 chars of text)
+// Generate a summary from notes content (first ~100 chars of text).
+// Content is stored as HTML by Tiptap; strip tags then normalise whitespace.
 export function generateNotesSummary(content: string): string {
   const text = content
-    .replace(/<[^>]+>/g, " ") // strip HTML tags (Tiptap stores HTML)
-    .replace(/^#{1,6}\s+/gm, "")
-    .replace(/[*_~`>]/g, "")
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/<[^>]+>/g, " ") // strip HTML tags
     .replace(/\s+/g, " ")
     .trim();
   if (text.length <= 100) {
