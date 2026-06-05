@@ -1,0 +1,60 @@
+/* SplitView.css */
+.split-view-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.split-view__pane-left,
+.split-view__pane-right {
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── 💡 改造核心：0 宽度分割线 ────────────────── */
+.split-view__resizer {
+  width: 0;                /* 核心：不占用任何物理宽度，左右无缝连接 */
+  position: relative;
+  z-index: 10;
+  cursor: col-resize;
+  flex-shrink: 0;
+}
+
+/* 用伪元素创造一个隐形的、稍微宽一点的鼠标触发热区 */
+.split-view__resizer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -2px;
+  right: -2px;
+  background: transparent;
+  transition: background 0.2s ease;
+}
+
+/* 当鼠标悬浮或者正在拖拽时，给热区亮起一条精致的 Wisp 紫色半透明光晕 */
+.split-view__resizer:hover::before,
+.split-view__resizer:active::before {
+  background: rgba(105, 101, 219, 0.2);
+}
+
+/* 亮色模式下：只留一条极细的内敛分界线 */
+.split-view__resizer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  background: rgba(0, 0, 0, 0.06);
+  pointer-events: none;   /* 确保线条不干扰鼠标事件 */
+}
+
+/* 暗黑模式下 */
+html.dark .split-view__resizer::after {
+  background: rgba(255, 255, 255, 0.06);
+}

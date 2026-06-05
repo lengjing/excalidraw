@@ -42,6 +42,56 @@ html.dark .workspace-view__nav {
   background: rgba(105, 101, 219, 1);
 }
 
+/* ── 💡 新增：视图切换控制组样式 ────────────────── */
+.workspace-view__layout-switch {
+  display: flex;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 3px;
+  border-radius: 8px;
+}
+
+html.dark .workspace-view__layout-switch {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.layout-btn {
+  border: none;
+  background: transparent;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  color: #666;
+}
+
+html.dark .layout-btn {
+  color: #aaa;
+}
+
+.layout-btn:hover {
+  background: rgba(255, 255, 255, 0.5);
+  color: #1a1a1a;
+}
+
+html.dark .layout-btn:hover {
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+}
+
+.layout-btn.active {
+  background: #ffffff;
+  color: #6965db; /* 保持与 Wisp 按钮相呼应的紫色调 */
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+html.dark .layout-btn.active {
+  background: rgba(105, 101, 219, 0.9);
+  color: #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
 /* ── Side-by-side body ───────────────────────── */
 .workspace-view__body {
   flex: 1;
@@ -50,27 +100,41 @@ html.dark .workspace-view__nav {
   min-height: 0;
 }
 
-/* Canvas takes 65% */
-.workspace-view__canvas-pane {
-  flex: 0 0 65%;
+/* ── 💡 动态布局切换控制 ──────────────────────── */
+
+/* 1. 默认/双栏分栏模式 (split) */
+.workspace-view--split .workspace-view__canvas-pane {
+  flex: 1; /* 💡 改为 1 */
   position: relative;
   overflow: hidden;
-  border-right: 1px solid rgba(0, 0, 0, 0.08);
+  border-right: none;
 }
 
-html.dark .workspace-view__canvas-pane {
+html.dark .workspace-view--split .workspace-view__canvas-pane {
   border-right-color: rgba(255, 255, 255, 0.08);
 }
 
-/* Notes take 35% */
-.workspace-view__notes-pane {
-  flex: 0 0 35%;
+.workspace-view--split .workspace-view__notes-pane {
+  flex: 1; /* 💡 改为 1 */
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  min-width: 280px;
 }
 
+/* 2. 纯画图模式 (canvas-only) */
+.workspace-view--canvas-only .workspace-view__canvas-pane {
+  flex: 0 0 100%;
+  width: 100%;
+}
+
+/* 3. 纯笔记模式 (notes-only) */
+.workspace-view--notes-only .workspace-view__notes-pane {
+  flex: 0 0 100%;
+  width: 100%;
+}
+
+
+/* ── Loading ────────────────────────────────── */
 .workspace-view__loading {
   display: flex;
   align-items: center;
@@ -79,4 +143,3 @@ html.dark .workspace-view__canvas-pane {
   color: #999;
   font-size: 14px;
 }
-

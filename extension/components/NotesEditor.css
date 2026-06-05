@@ -1,8 +1,7 @@
 .notes-editor {
-  height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  height: 100%;
   font-family:
     "Assistant",
     -apple-system,
@@ -10,43 +9,58 @@
     "Segoe UI",
     Roboto,
     sans-serif;
+  position: relative; /* 💡 必须为相对定位，方便 Header 绝对定位 */
+  background: transparent;
 }
 
-/* ── Compact header ──────────────────────────── */
 .notes-editor__header {
-  flex: 0 0 auto;
+  position: absolute;
+  top: 14px;           /* 距离卡片顶部悬空 */
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: space-between;
-  padding: 8px 16px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  background: #fafafa;
+  gap: 12px;
+  padding: 6px 16px;
+  height: 36px;        /* 紧凑高度 */
+
+  /* 独立的悬浮卡片背景与阴影 */
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 8px; /* 偏方圆的精致感 */
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  z-index: 50;         /* 确保飘在笔记正文最上方 */
+  white-space: nowrap;
 }
 
+/* 暗黑模式下的 Header 胶囊 */
 html.dark .notes-editor__header {
-  background: #252525;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(40, 40, 40, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .notes-editor__label {
-  font-size: 12px;
-  font-weight: 600;
-  color: #888;
+  font-size: 11px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-html.dark .notes-editor__label {
-  color: #666;
+  letter-spacing: 1.5px;
+  color: #6965db; /* Wisp 专属紫 */
 }
 
 .notes-editor__hint {
   font-size: 11px;
-  color: #bbb;
+  color: #999;
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  padding-left: 12px;
 }
 
 html.dark .notes-editor__hint {
-  color: #555;
+  border-left-color: rgba(255, 255, 255, 0.1);
 }
 
 .notes-editor__hint kbd {
@@ -68,8 +82,16 @@ html.dark .notes-editor__hint kbd {
 /* ── Rich-text content area ──────────────────── */
 .notes-editor__content {
   flex: 1;
+  padding: 16px;
+  /* 💡 关键：顶部留出 56px 的大空隙（36px高度 + 12px定位 + 额外留白），防止文字刚开始时被居中的胶囊挡住 */
+  padding-top: 56px;
   overflow-y: auto;
-  min-height: 0;
+  height: 100%;
+}
+
+/* 确保编辑器本身铺满 */
+.notes-editor__content .tiptap {
+  min-height: 100%;
 }
 
 .notes-editor__content .ProseMirror {
@@ -87,6 +109,7 @@ html.dark .notes-editor__hint kbd {
   line-height: 1.8;
   color: #1a1a1a;
   background: #fff;
+  box-sizing: border-box;
 }
 
 html.dark .notes-editor__content .ProseMirror {

@@ -11,6 +11,7 @@ import {
   resetStorageKeys,
 } from "../../excalidraw-app/app_constants";
 import { NotesEditor } from "./NotesEditor";
+import { SplitView } from "./SplitView";
 
 import "./WorkspaceView.css";
 
@@ -46,10 +47,16 @@ function captureCanvasThumbnail(): string | null {
   }
 }
 
+// 💡 定义布局模式类型
+type LayoutMode = "split" | "canvas-only" | "notes-only";
+
 export function WorkspaceView({ workspaceId }: WorkspaceViewProps) {
   const [ExcalidrawApp, setExcalidrawApp] =
     useState<React.ComponentType | null>(null);
   const thumbnailTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // 💡 核心状态：管理当前布局
+  const [layoutMode, setLayoutMode] = useState<LayoutMode>("split");
 
   useEffect(() => {
     configureBoardStorage(workspaceId);
@@ -98,7 +105,8 @@ export function WorkspaceView({ workspaceId }: WorkspaceViewProps) {
   }, [ExcalidrawApp, workspaceId]);
 
   return (
-    <div className="workspace-view">
+    // 💡 动态注入布局类名：workspace-view--split / --canvas-only / --notes-only
+    <div className={`workspace-view workspace-view--${layoutMode}`}>
       <div className="workspace-view__nav">
         <button
           className="workspace-view__back"
@@ -107,22 +115,64 @@ export function WorkspaceView({ workspaceId }: WorkspaceViewProps) {
         >
           ← Wisp
         </button>
+
+        {/* 💡 视图切换控制组 */}
+        <div className="workspace-view__layout-switch">
+          <button
+            className={`layout-btn ${layoutMode === "canvas-only" ? "active" : ""}`}
+            onClick={() => setLayoutMode("canvas-only")}
+            title="纯画板"
+          >
+            🎨 仅画布
+          </button>
+          <button
+            className={`layout-btn ${layoutMode === "split" ? "active" : ""}`}
+            onClick={() => setLayoutMode("split")}
+            title="双栏并排"
+          >
+             Divided 左右分栏
+          </button>
+          <button
+            className={`layout-btn ${layoutMode === "notes-only" ? "active" : ""}`}
+            onClick={() => setLayoutMode("notes-only")}
+            title="纯笔记"
+          >
+            📝 仅笔记
+          </button>
+        </div>
       </div>
 
       <div className="workspace-view__body">
-        <div className="workspace-view__canvas-pane">
-          {ExcalidrawApp ? (
-            <ExcalidrawApp />
-          ) : (
-            <div className="workspace-view__loading">Loading canvas…</div>
-          )}
-        </div>
-
-        <div className="workspace-view__notes-pane">
-          <NotesEditor workspaceId={workspaceId} />
-        </div>
+        {/* 💡 关键改动：根据不同的 layoutMode 渲染不同的内容 */}
+        {layoutMode === "split" ? (
+          <SplitView
+            left={
+              <div className="workspace-view__canvas-pane" style={{ width: '100%' }}>
+                {ExcalidrawApp ? <ExcalidrawApp /> : <div className="workspace-view__loading">Loading canvas…</div>}
+              </div>
+            }
+            right={
+              <div className="workspace-view__notes-pane" style={{ width: '100%', minWidth: 'unset' }}>
+                <NotesEditor workspaceId={workspaceId} />
+              </div>
+            }
+          />
+        ) : (
+          <>
+            {/* 非分栏模式下，原本的独立满铺逻辑保持不变 */}
+            {layoutMode !== "notes-only" && (
+              <div className="workspace-view__canvas-pane">
+                {ExcalidrawApp ? <ExcalidrawApp /> : <div className="workspace-view__loading">Loading canvas…</div>}
+              </div>
+            )}
+            {layoutMode !== "canvas-only" && (
+              <div className="workspace-view__notes-pane">
+                <NotesEditor workspaceId={workspaceId} />
+              </div>
+            )}
+          </>
+        )}
       </div>
     </div>
   );
 }
-
