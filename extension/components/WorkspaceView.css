@@ -107,7 +107,6 @@ html.dark .layout-btn.active {
   flex: 1; /* 💡 改为 1 */
   position: relative;
   overflow: hidden;
-  border-right: none;
 }
 
 html.dark .workspace-view--split .workspace-view__canvas-pane {

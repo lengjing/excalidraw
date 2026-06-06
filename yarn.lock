@@ -3143,6 +3143,11 @@
   resolved "https://registry.npmmirror.com/@tiptap/extension-heading/-/extension-heading-3.25.0.tgz#b1e45bfb8f9d2003910cb70152fc608cedf7ecc1"
   integrity sha512-3SJGZgV3cNQiUi98dWQQ3SFQAKaZg+O8PTdQmA4XC4JJn3NgDpBHiRz+bSE4NYjaRXk8DOq3+zxgGGiaGsC1Ww==
 
+"@tiptap/extension-highlight@3.25.0":
+  version "3.25.0"
+  resolved "https://registry.npmmirror.com/@tiptap/extension-highlight/-/extension-highlight-3.25.0.tgz#b048ea4423f6428b789a124ddb9b9045e5d35957"
+  integrity sha512-YEtqiiyjYUxdIuSbwC5wvUrdK/hK8uPab70avVmiHlmuav+e8FGShdsKCQ17F9z/ECfwlhr0u9sojYyyhSJXLg==
+
 "@tiptap/extension-horizontal-rule@^3.25.0":
   version "3.25.0"
   resolved "https://registry.npmmirror.com/@tiptap/extension-horizontal-rule/-/extension-horizontal-rule-3.25.0.tgz#eedef936ff1765639dbd7e34ed1fd7c64ee80c3d"
@@ -3199,6 +3204,16 @@
   version "3.25.0"
   resolved "https://registry.npmmirror.com/@tiptap/extension-strike/-/extension-strike-3.25.0.tgz#9cf8ac67202332daff7ee124d4b2662a1d980b36"
   integrity sha512-rtM9tkqH8XWay7TplUcXPjlBiNg/dbEOuaCvZGvNxTw8xbH+cmEGPxojWVW6oVMsQodBlUoNveATE2yzhiUB1A==
+
+"@tiptap/extension-task-item@3.25.0":
+  version "3.25.0"
+  resolved "https://registry.npmmirror.com/@tiptap/extension-task-item/-/extension-task-item-3.25.0.tgz#deb8e164ee590b0536e9ae80b32910e97ca0e652"
+  integrity sha512-SLneMmcXltJUjuyxbthr3glCXygkBvU4OsMXWNIVvh3/oE/PDp06i6sbFLUmeBl+LJGgWBNTj2DBM2BGY7PUSg==
+
+"@tiptap/extension-task-list@3.25.0":
+  version "3.25.0"
+  resolved "https://registry.npmmirror.com/@tiptap/extension-task-list/-/extension-task-list-3.25.0.tgz#8ce1deb46301bffa35fd3a3937352306997df45a"
+  integrity sha512-9cP0G7MjmFkoqkmPNRre0CklkMreNfYdm63NQJ/ZB7L+27qXuqar0MmFL38EGU+FtbMqNu9DNWvooEL5Q3UL/A==
 
 "@tiptap/extension-text@^3.25.0":
   version "3.25.0"

@@ -1,15 +1,17 @@
 /**
  * NotesEditor - Rich text editor powered by Tiptap.
  * Supports headings, bold/italic, bullet/ordered lists, code blocks,
- * blockquotes, and full undo/redo — all via standard keyboard shortcuts.
+ * blockquotes, task lists, highlights, and full undo/redo.
  */
 
 import { useEffect, useCallback, useRef } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
-// 💡 导入 Image 扩展
 import Image from "@tiptap/extension-image";
+import TaskList from '@tiptap/extension-task-list';
+import TaskItem from '@tiptap/extension-task-item';
+import Highlight from '@tiptap/extension-highlight';
 import {
   getNotesContent,
   saveNotesContent,
@@ -45,6 +47,13 @@ export function NotesEditor({ workspaceId }: NotesEditorProps) {
       Placeholder.configure({ placeholder: NOTES_PLACEHOLDER }),
       Image.configure({
         allowBase64: true, // 允许使用 base64 格式的图片
+      }),
+      TaskList,
+      TaskItem.configure({
+        nested: true, // 支持嵌套列表（按 Tab 缩进）
+      }),
+      Highlight.configure({
+        multicolor: false, // 保持极简单色，由 CSS 控制高级感颜色
       }),
     ],
     // 💡 核心配置：拦截粘贴和拖拽事件
@@ -107,7 +116,12 @@ export function NotesEditor({ workspaceId }: NotesEditorProps) {
     },
   });
 
-  // Reload content when the workspace changes
+  // 💡 3. 点击高光笔的交互函数（自动聚集焦点并切换高亮状态）
+  const toggleHighlight = () => {
+    if (!editor) return;
+    editor.chain().focus().toggleHighlight().run();
+  };
+
   useEffect(() => {
     if (!editor) {
       return;
@@ -137,9 +151,26 @@ export function NotesEditor({ workspaceId }: NotesEditorProps) {
     <div className="notes-editor" onKeyDown={handleKeyDown}>
       <div className="notes-editor__header">
         <span className="notes-editor__label">Notes</span>
+
+        {/* 💡 4. 在 Header 中插入智能感应状态的高光笔按钮 */}
+        {editor && (
+          <button
+            className={`notes-editor__highlighter-btn ${editor.isActive('highlight') ? 'is-active' : ''}`}
+            onClick={toggleHighlight}
+            title="高亮选中文本 (Ctrl+Shift+H)"
+          >
+            {/* 极简手绘/线性质感的高光笔小图标 */}
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m12 14 4-4 4 4-4 4z"/>
+              <path d="M5 21h14"/>
+              <path d="M12 14 7 9 4 12c-1.1.9-1.2 2.6-.2 3.7L7 19c1.1 1 2.7.9 3.7-.2l1.3-1.3Z"/>
+            </svg>
+          </button>
+        )}
+
         <span className="notes-editor__hint">
           <kbd>Ctrl+B</kbd> bold · <kbd>Ctrl+I</kbd> italic ·{" "}
-          <kbd>Ctrl+Z</kbd> undo
+          <kbd>Ctrl+Shift+H</kbd> highlight · <kbd>Ctrl+Z</kbd> undo
         </span>
       </div>
       <EditorContent editor={editor} className="notes-editor__content" />
